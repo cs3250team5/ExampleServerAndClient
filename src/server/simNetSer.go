@@ -32,6 +32,7 @@ func main() {
 
 func handleConnection(connection net.Conn, num int) {
 	fmt.Println("Connected to ", num)
+	s := "Message Recieved"
 	defer func() {
 		connection.Close()
 		fmt.Println("Connection ", num, " closed")
@@ -42,6 +43,8 @@ func handleConnection(connection net.Conn, num int) {
 		fmt.Println("Error in server:HandleConnection: " + err.Error())
 		return
 	}
+
+	fmt.Fprintf(connection, s)
 
 	fmt.Print(string(buffer[:numBytes]) + "\n")
 }

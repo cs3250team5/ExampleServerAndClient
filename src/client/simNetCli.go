@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	Port = "8080"
-	Host = "localhost"
+	Port        = "8080"
+	Host        = "localhost"
+	MessageSize = 1024
 )
 
 var Messages = [...]string{
@@ -36,7 +37,20 @@ func connect() net.Conn {
 }
 func send(s string) {
 	connection := connect()
+	defer func() {
+		connection.Close()
+		fmt.Println("Connection Closed")
+	}()
+
 	fmt.Fprintf(connection, s)
-	connection.Close()
-	fmt.Println("Connection Closed")
+
+	buffer := make([]byte, MessageSize)
+	numBytes, err := connection.Read(buffer)
+	if err != nil && err.Error() != "EOF" {
+		fmt.Println("Error in server:HandleConnection: " + err.Error())
+		return
+	}
+
+	fmt.Print(string(buffer[:numBytes]) + "\n")
+
 }
