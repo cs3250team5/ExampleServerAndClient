@@ -32,7 +32,7 @@ func main() {
 
 func handleConnection(connection net.Conn, num int) {
 	fmt.Println("Connected to ", num)
-	s := "Message Recieved"
+	s := "Message Received"
 	defer func() {
 		connection.Close()
 		fmt.Println("Connection ", num, " closed")
